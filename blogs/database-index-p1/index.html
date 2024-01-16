@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Database Index (Part 1) | Mr.Fish Personal Blog</title>
+<meta name="keywords" content="Database, Theory">
+<meta name="description" content="Introduction to Indexing SQL database">
+<meta name="author" content="">
+<link rel="canonical" href="https://becacabe2002.github.io/blogs/database-index-p1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://becacabe2002.github.io/favicon-fish2.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://becacabe2002.github.io/favicon-fish2-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://becacabe2002.github.io/favicon-fish2-32x32.png">
+<link rel="apple-touch-icon" href="https://becacabe2002.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://becacabe2002.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Database Index (Part 1)" />
+<meta property="og:description" content="Introduction to Indexing SQL database" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://becacabe2002.github.io/blogs/database-index-p1/" />
+<meta property="og:image" content="https://becacabe2002.github.io/images/database-index/database-index-cover.png" /><meta property="article:section" content="blogs" />
+<meta property="article:published_time" content="2024-01-16T12:52:59+07:00" />
+<meta property="article:modified_time" content="2024-01-16T12:52:59+07:00" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://becacabe2002.github.io/images/database-index/database-index-cover.png" />
+<meta name="twitter:title" content="Database Index (Part 1)"/>
+<meta name="twitter:description" content="Introduction to Indexing SQL database"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blogs",
+      "item": "https://becacabe2002.github.io/blogs/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Database Index (Part 1)",
+      "item": "https://becacabe2002.github.io/blogs/database-index-p1/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Database Index (Part 1)",
+  "name": "Database Index (Part 1)",
+  "description": "Introduction to Indexing SQL database",
+  "keywords": [
+    "Database", "Theory"
+  ],
+  "articleBody": "I. What is Index? A data structure is used to locate and fast access data in tables or views\nHelp reducing the amount of access to memory during query execution -\u003e Increase database query performance.\nTwo types of indexes: Clustered Non-clustered II. What is the index database used for? Example:\nselect * from table_name where column_name = val If there is no index for the column_name column, the system will scan all the rows of the table_name table to search for the row that satisfies condition column_name = val\nAn index points to the address of data in a table (like table of contents in a book)\nIndexes can be created for one or more columns in a table.\nCreate by default for primary keys, foreign keys It is possible to create additional indexes for columns if needed III. The structure of the index Search Key: contains a copy of the indexed column’s values Data Reference: contains the pointer to the address of the record with the corresponding index column value IV. Types of indexes B-tree The default index type graph TD 20,40 --\u003e 10; 10 --\u003e 5; 10--\u003e15 20,40 --\u003e 30,33; 30,33 --\u003e 25,28; 30,33 --\u003e 31; 30,33 --\u003e 35 20,40 --\u003e 50,60; 50,60 --\u003e 45; 50,60 --\u003e 55; 50,60 --\u003e 65\rFeatures:\nIndex data is organized and stored in the form of tree (root, branch, leaf)\nThe values of nodes increase from left to right\nThe B-tree index is used in comparision expressions: =, \u003e, \u003e=, \u003c, \u003c=, BETWEEN, LIKE -\u003e Good for ORDER BY statement\nWhen searching for the node, it starts from the root node, and then comes to the branch and leaf, until all satisfied data are found.\nSyntax\n--- create index CREATE INDEX id_index ON table_name (column_name [, column_name…]) USING BTREE; ALTER TABLE table_name ADD INDEX id_index (column_name [, column_name…]) --- delete index DROP INDEX index_name ON table_name For more details, visit here\nHash Based on Hash function algorithm. Corresponding to each block of data, index will generate a bucket key (also called hash value) to distinguish. Features:\nHash index should be used only in = and \u003c\u003e (not equal to operator). (Don’t use for operators to find a range of values, like \u003e or \u003c) The ORDER BY is not optimized when using Hash index. (can’t find the next element in the order) Hash is faster than B-tree Syntax\n--- create index CREATE INDEX id_index ON table_name(column_name [, column_name…]) USING HASH; ALTER TABLE table_name ADD INDEX id_index(column_name [, column_name…]) USING HASH; For more details about Hash index, visit here\nStorage Engine When choosing the index type, it also depends on whether or not the Storage Engine supports the type of index. Storage Engine Supported Index Types InnoDB Btree MyISAM Btree MEMORY/HEAP Hash, Btree NDB Hash, Btree V. How to use index database effectively? SHOULD INDEX:\nThe columns used in WHERE,JOIN,ORDER BY SHOULDN’T INDEX:\nSmall tables, containing little data Tables are updated and inserted data regularly Columns contain so many NULL values Columns are regularly updated ⚠️ Downside of indexing is that it takes up more memory to store.\n",
+  "wordCount" : "515",
+  "inLanguage": "en",
+  "image":"https://becacabe2002.github.io/images/database-index/database-index-cover.png","datePublished": "2024-01-16T12:52:59+07:00",
+  "dateModified": "2024-01-16T12:52:59+07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://becacabe2002.github.io/blogs/database-index-p1/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mr.Fish Personal Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://becacabe2002.github.io/favicon-fish2.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://becacabe2002.github.io/" accesskey="h" title="Mr.Fish Personal Blog (Alt + H)">Mr.Fish Personal Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://becacabe2002.github.io/search/" title="search (Alt &#43; /)" accesskey=/>
+                    <span>search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://becacabe2002.github.io/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://becacabe2002.github.io/archives/" title="archives">
+                    <span>archives</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://becacabe2002.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://becacabe2002.github.io/blogs/">Blogs</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Database Index (Part 1)
+    </h1>
+    <div class="post-description">
+      Introduction to Indexing SQL database
+    </div>
+    <div class="post-meta"><span title='2024-01-16 12:52:59 +0700 +07'>January 16, 2024</span>
+
+</div>
+  </header> 
+<figure class="entry-cover"><img loading="eager" src="https://becacabe2002.github.io/images/database-index/database-index-cover.png" alt="alt text">
+        
+</figure><div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#i-what-is-index" aria-label="I. What is Index?">I. What is Index?</a></li>
+                <li>
+                    <a href="#ii-what-is-the-index-database-used-for" aria-label="II. What is the index database used for?">II. What is the index database used for?</a></li>
+                <li>
+                    <a href="#iii-the-structure-of-the-index" aria-label="III. The structure of the index">III. The structure of the index</a></li>
+                <li>
+                    <a href="#iv-types-of-indexes" aria-label="IV. Types of indexes">IV. Types of indexes</a><ul>
+                        
+                <li>
+                    <a href="#b-tree" aria-label="B-tree">B-tree</a></li>
+                <li>
+                    <a href="#hash" aria-label="Hash">Hash</a></li>
+                <li>
+                    <a href="#storage-engine" aria-label="Storage Engine">Storage Engine</a></li></ul>
+                </li>
+                <li>
+                    <a href="#v-how-to-use-index-database-effectively" aria-label="V. How to use index database effectively?">V. How to use index database effectively?</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="i-what-is-index">I. What is Index?<a hidden class="anchor" aria-hidden="true" href="#i-what-is-index">#</a></h2>
+<blockquote>
+<p>A data structure is used to locate and fast access data in tables or views</p>
+</blockquote>
+<ul>
+<li>Help reducing the amount of access to memory during query execution</li>
+</ul>
+<p><strong>-&gt; Increase database query performance.</strong></p>
+<ul>
+<li>Two types of indexes:
+<ul>
+<li>Clustered</li>
+<li>Non-clustered</li>
+</ul>
+</li>
+</ul>
+<h2 id="ii-what-is-the-index-database-used-for">II. What is the index database used for?<a hidden class="anchor" aria-hidden="true" href="#ii-what-is-the-index-database-used-for">#</a></h2>
+<p>Example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">table_name</span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">column_name</span> <span style="color:#f92672">=</span> val
+</span></span></code></pre></div><ul>
+<li>
+<p>If there is no index for the <code>column_name</code> column, the system will <strong>scan all the rows</strong> of the <code>table_name</code> table to search for the row that satisfies condition <code>column_name = val</code></p>
+</li>
+<li>
+<p>An index <strong>points to the address</strong> of data in a table (like table of contents in a book)</p>
+</li>
+<li>
+<p>Indexes can be created for one or more columns in a table.</p>
+<ul>
+<li>Create by default for <em><strong>primary keys</strong></em>, <em><strong>foreign keys</strong></em></li>
+<li>It is possible to create <strong>additional indexes</strong> for columns if needed</li>
+</ul>
+</li>
+</ul>
+<h2 id="iii-the-structure-of-the-index">III. The structure of the index<a hidden class="anchor" aria-hidden="true" href="#iii-the-structure-of-the-index">#</a></h2>
+<!-- raw HTML omitted -->
+<ul>
+<li><em><strong><!-- raw HTML omitted -->Search Key<!-- raw HTML omitted --></strong></em>: contains a copy of the indexed column&rsquo;s values</li>
+<li><!-- raw HTML omitted -->Data Reference<!-- raw HTML omitted -->: contains the pointer to the address of the record with the corresponding index column value</li>
+</ul>
+<h2 id="iv-types-of-indexes">IV. Types of indexes<a hidden class="anchor" aria-hidden="true" href="#iv-types-of-indexes">#</a></h2>
+<h3 id="b-tree">B-tree<a hidden class="anchor" aria-hidden="true" href="#b-tree">#</a></h3>
+<ul>
+<li>The default index type</li>
+</ul>
+<pre class="mermaid">graph TD
+20,40 --> 10; 10 --> 5; 10-->15
+20,40 --> 30,33; 30,33 --> 25,28; 30,33 --> 31; 30,33 --> 35
+20,40 --> 50,60; 50,60 --> 45; 50,60 --> 55; 50,60 --> 65
+  </pre>
+  <p><strong>Features</strong>:</p>
+<ul>
+<li>
+<p>Index data is organized and stored in the form of tree (root, branch, leaf)</p>
+</li>
+<li>
+<p>The values of nodes <strong>increase from left to right</strong></p>
+</li>
+<li>
+<p>The B-tree index is used in <strong>comparision expressions</strong>: <code>=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>BETWEEN</code>, <code>LIKE</code>
+<strong>-&gt; Good for <code>ORDER BY</code> statement</strong></p>
+</li>
+<li>
+<p>When searching for the node, it starts from the <em>root node</em>, and then comes to the <em>branch</em> and <em>leaf</em>, until all satisfied data are found.</p>
+</li>
+</ul>
+<p><strong>Syntax</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">--- create index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">INDEX</span> id_index <span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">table_name</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">column_name</span> [, <span style="color:#66d9ef">column_name</span><span style="color:#960050;background-color:#1e0010">…</span>]) <span style="color:#66d9ef">USING</span> BTREE;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span> <span style="color:#66d9ef">ADD</span> <span style="color:#66d9ef">INDEX</span> id_index
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">column_name</span> [, <span style="color:#66d9ef">column_name</span><span style="color:#960050;background-color:#1e0010">…</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--- delete index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">INDEX</span> index_name <span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">table_name</span>
+</span></span></code></pre></div><p>For more details, visit <strong><a href="https://viblo.asia/p/gioi-thieu-ve-b-tree-index-trong-database-ByEZkQn25Q0">here</a></strong></p>
+<h3 id="hash">Hash<a hidden class="anchor" aria-hidden="true" href="#hash">#</a></h3>
+<ul>
+<li>Based on <strong>Hash function</strong> algorithm.
+<ul>
+<li>Corresponding to each block of data, index will generate <strong>a bucket key</strong> (also called hash value) to distinguish.</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src="/images/database-index/hash-index-img.png" alt="Hash index image"  />
+</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Hash index should be used only in <code>=</code> and <code>&lt;&gt;</code> (not equal to operator).
+(<em>Don&rsquo;t use for operators to find a range of values, like <code>&gt;</code> or <code>&lt;</code></em>)</li>
+<li>The <code>ORDER BY</code> is <strong>not optimized</strong> when using Hash index. (can&rsquo;t find the next element in the order)</li>
+<li>Hash is <strong>faster</strong> than B-tree</li>
+</ul>
+<p><strong>Syntax</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">--- create index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">INDEX</span> id_index
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">table_name</span>(<span style="color:#66d9ef">column_name</span> [, <span style="color:#66d9ef">column_name</span><span style="color:#960050;background-color:#1e0010">…</span>]) <span style="color:#66d9ef">USING</span> HASH;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">table_name</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ADD</span> <span style="color:#66d9ef">INDEX</span> id_index(<span style="color:#66d9ef">column_name</span> [, <span style="color:#66d9ef">column_name</span><span style="color:#960050;background-color:#1e0010">…</span>]) <span style="color:#66d9ef">USING</span> HASH;
+</span></span></code></pre></div><p>For more details about Hash index, visit <strong><a href="https://viblo.asia/p/hash-index-trong-sql-63vKjwOVZ2R">here</a></strong></p>
+<h3 id="storage-engine">Storage Engine<a hidden class="anchor" aria-hidden="true" href="#storage-engine">#</a></h3>
+<ul>
+<li>When choosing the index type, it also depends on whether or not the Storage Engine supports the type of index.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Storage Engine</th>
+<th style="text-align:center">Supported Index Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">InnoDB</td>
+<td style="text-align:center">Btree</td>
+</tr>
+<tr>
+<td style="text-align:left">MyISAM</td>
+<td style="text-align:center">Btree</td>
+</tr>
+<tr>
+<td style="text-align:left">MEMORY/HEAP</td>
+<td style="text-align:center">Hash, Btree</td>
+</tr>
+<tr>
+<td style="text-align:left">NDB</td>
+<td style="text-align:center">Hash, Btree</td>
+</tr>
+</tbody>
+</table>
+<h2 id="v-how-to-use-index-database-effectively">V. How to use index database effectively?<a hidden class="anchor" aria-hidden="true" href="#v-how-to-use-index-database-effectively">#</a></h2>
+<ul>
+<li>
+<p><strong>SHOULD INDEX</strong>:</p>
+<ul>
+<li>The columns used in <code>WHERE</code>,<code>JOIN</code>,<code>ORDER BY</code></li>
+</ul>
+</li>
+<li>
+<p><strong>SHOULDN&rsquo;T INDEX</strong>:</p>
+<ul>
+<li>Small tables, containing little data</li>
+<li>Tables are updated and inserted data regularly</li>
+<li>Columns contain so many NULL values</li>
+<li>Columns are regularly updated</li>
+</ul>
+</li>
+</ul>
+<p>⚠️ <em>Downside of indexing is that it takes up more memory to store.</em></p>
+
+
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+      </script>
+    
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://becacabe2002.github.io/tags/database/">Database</a></li>
+      <li><a href="https://becacabe2002.github.io/tags/theory/">Theory</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://becacabe2002.github.io/blogs/database-index-p2/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Database Index (Part 2) - Clustered/Non-clustered</span>
+  </a>
+  <a class="next" href="https://becacabe2002.github.io/blogs/6-database-optimization-techniques/">
+    <span class="title">Next »</span>
+    <br>
+    <span>6 Database Optimization Techniques</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://becacabe2002.github.io/">Mr.Fish Personal Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

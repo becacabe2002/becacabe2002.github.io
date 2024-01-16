@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Theory on Mr.Fish Personal Blog</title>
+    <link>https://becacabe2002.github.io/tags/theory/</link>
+    <description>Recent content in Theory on Mr.Fish Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Jan 2024 14:25:41 +0700</lastBuildDate>
+    <atom:link href="https://becacabe2002.github.io/tags/theory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Database Index (Part 2) - Clustered/Non-clustered</title>
+      <link>https://becacabe2002.github.io/blogs/database-index-p2/</link>
+      <pubDate>Tue, 16 Jan 2024 14:25:41 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/blogs/database-index-p2/</guid>
+      <description>Continue of part 1, we gonna learn about Clustered/Non-clustered Index.</description>
+    </item>
+    <item>
+      <title>Database Index (Part 1)</title>
+      <link>https://becacabe2002.github.io/blogs/database-index-p1/</link>
+      <pubDate>Tue, 16 Jan 2024 12:52:59 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/blogs/database-index-p1/</guid>
+      <description>Introduction to Indexing SQL database</description>
+    </item>
+  </channel>
+</rss>

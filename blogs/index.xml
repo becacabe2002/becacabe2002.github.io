@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mr.Fish Personal Blog</title>
-    <link>https://becacabe2002.github.io/</link>
-    <description>Recent content on Mr.Fish Personal Blog</description>
+    <title>Blogs on Mr.Fish Personal Blog</title>
+    <link>https://becacabe2002.github.io/blogs/</link>
+    <description>Recent content in Blogs on Mr.Fish Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 16 Jan 2024 15:24:08 +0700</lastBuildDate>
-    <atom:link href="https://becacabe2002.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://becacabe2002.github.io/blogs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Database Index (Part 2) - Clustered/Non-clustered</title>
       <link>https://becacabe2002.github.io/blogs/database-index-p2/</link>

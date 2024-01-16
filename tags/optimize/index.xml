@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Optimize on Mr.Fish Personal Blog</title>
+    <link>https://becacabe2002.github.io/tags/optimize/</link>
+    <description>Recent content in Optimize on Mr.Fish Personal Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Jan 2024 09:45:22 +0700</lastBuildDate>
+    <atom:link href="https://becacabe2002.github.io/tags/optimize/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>6 Database Optimization Techniques</title>
+      <link>https://becacabe2002.github.io/blogs/6-database-optimization-techniques/</link>
+      <pubDate>Tue, 16 Jan 2024 09:45:22 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/blogs/6-database-optimization-techniques/</guid>
+      <description>&amp;lt;enter description here&amp;gt;</description>
+    </item>
+  </channel>
+</rss>
