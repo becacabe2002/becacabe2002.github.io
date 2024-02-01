@@ -6,8 +6,29 @@
     <description>Recent content in Tags on Mr.Fish Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Jan 2024 14:25:41 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 01 Feb 2024 13:48:41 +0700</lastBuildDate>
     <atom:link href="https://becacabe2002.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>airflow</title>
+      <link>https://becacabe2002.github.io/tags/airflow/</link>
+      <pubDate>Thu, 01 Feb 2024 13:48:41 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/tags/airflow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>data</title>
+      <link>https://becacabe2002.github.io/tags/data/</link>
+      <pubDate>Thu, 01 Feb 2024 13:48:41 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/tags/data/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>orchestration</title>
+      <link>https://becacabe2002.github.io/tags/orchestration/</link>
+      <pubDate>Thu, 01 Feb 2024 13:48:41 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/tags/orchestration/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Database</title>
       <link>https://becacabe2002.github.io/tags/database/</link>

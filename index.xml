@@ -6,8 +6,15 @@
     <description>Recent content on Mr.Fish Personal Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Jan 2024 15:24:08 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 01 Feb 2024 13:48:41 +0700</lastBuildDate>
     <atom:link href="https://becacabe2002.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Introduction to Apache Airflow | Airflow Part 1</title>
+      <link>https://becacabe2002.github.io/blogs/apache-airflow-p1/</link>
+      <pubDate>Thu, 01 Feb 2024 13:48:41 +0700</pubDate>
+      <guid>https://becacabe2002.github.io/blogs/apache-airflow-p1/</guid>
+      <description>Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow.</description>
+    </item>
     <item>
       <title>Database Index (Part 2) - Clustered/Non-clustered</title>
       <link>https://becacabe2002.github.io/blogs/database-index-p2/</link>

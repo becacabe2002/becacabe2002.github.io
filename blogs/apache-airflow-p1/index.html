@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Introduction to Apache Airflow | Airflow Part 1 | Mr.Fish Personal Blog</title>
+<meta name="keywords" content="airflow, data, orchestration">
+<meta name="description" content="Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow.">
+<meta name="author" content="">
+<link rel="canonical" href="https://becacabe2002.github.io/blogs/apache-airflow-p1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://becacabe2002.github.io/favicon-fish2.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://becacabe2002.github.io/favicon-fish2-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://becacabe2002.github.io/favicon-fish2-32x32.png">
+<link rel="apple-touch-icon" href="https://becacabe2002.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://becacabe2002.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Introduction to Apache Airflow | Airflow Part 1" />
+<meta property="og:description" content="Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://becacabe2002.github.io/blogs/apache-airflow-p1/" />
+<meta property="og:image" content="https://becacabe2002.github.io/images/airflow/airflow-cover.png" /><meta property="article:section" content="blogs" />
+<meta property="article:published_time" content="2024-02-01T13:48:41+07:00" />
+<meta property="article:modified_time" content="2024-02-01T13:48:41+07:00" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://becacabe2002.github.io/images/airflow/airflow-cover.png" />
+<meta name="twitter:title" content="Introduction to Apache Airflow | Airflow Part 1"/>
+<meta name="twitter:description" content="Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blogs",
+      "item": "https://becacabe2002.github.io/blogs/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Introduction to Apache Airflow | Airflow Part 1",
+      "item": "https://becacabe2002.github.io/blogs/apache-airflow-p1/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Introduction to Apache Airflow | Airflow Part 1",
+  "name": "Introduction to Apache Airflow | Airflow Part 1",
+  "description": "Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow.",
+  "keywords": [
+    "airflow", "data", "orchestration"
+  ],
+  "articleBody": "Định nghĩa Apache Airflow là một nền tảng mã nguồn mở để phát triển, lập lịch và giám sát luồng công việc của các project dữ liệu.\nAirflow hỗ trợ giao diện web giúp quản lý các trạng thái (state) của luồng công việc một cách trực quan. Ta có thể triển khai Airflow trên nhiều nền tảng, từ local trên máy tính cá nhân, tới hệ phân tán được setup để hỗ trợ luồng công việc khổng lồ. Một số đặc tính nổi bật của Airflow Dynamic: các pipeline trong Airflow được cấu hình động bằng việc sử dụng Python code.\nExtensible: Airflow framework có chứa các operators, cho phép kết nối với các công nghệ khác (Astronomer, Grafana …)\nFlexible: tính linh hoạt của luồng hoạt động nhờ tận dụng Jinja template\nVì sao nên dùng Airflow? Với những workflow có khởi đầu và kết thúc rõ ràng, ta có thể cấu hình chúng thành các Airflow DAG (sẽ được giới thiệu sau)\nWorkflow được định nghĩa thành Python code, cho phép:\nWorkflows có thể được quản lý phiên bản, cho phép rollback phiên bản cũ. Workflows có thể được phát triển bởi nhiều người trong một team. Có thể tạo các test để kiểm tra các chức năng Airflow cho phép lập lịch các task, giúp tạo các pipeline phức tạp. Ngoài ra, khả năng chạy lại một phần pipeline sau khi khác phục sự cố giúp tối đa hóa hiệu suất.\nGiao diện người dùng của Airflow cung cấp:\nGóc nhìn chi tiết: Pipelines, Tasks Góc nhìn tổng quan hoạt động của các pipelines theo thời gian Inspect logs và khởi chạy task trong trường hợp chạy lỗi Airflow là mã nguồn mở, cho phép tính tùy biến cao. Do đó được tin dùng bởi nhiều công ty trên thế giới.\nNhững trường hợp nào không nên dùng Airflow? Airflow không hỗ trợ các luồng công việc không ngừng dựa trên sự kiện.\nMặc dù Airflow hỗ trợ Apache Kafka, là một streaming system được sử dụng để tiếp nhận và sử lý dữ liệu thời gian thực. Nhưng các task sẽ được tái khởi động định kì. Không phù hợp với nếu người dùng ưu việc chọn thay vì code.\n",
+  "wordCount" : "375",
+  "inLanguage": "en",
+  "image":"https://becacabe2002.github.io/images/airflow/airflow-cover.png","datePublished": "2024-02-01T13:48:41+07:00",
+  "dateModified": "2024-02-01T13:48:41+07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://becacabe2002.github.io/blogs/apache-airflow-p1/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mr.Fish Personal Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://becacabe2002.github.io/favicon-fish2.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://becacabe2002.github.io/" accesskey="h" title="Mr.Fish Personal Blog (Alt + H)">Mr.Fish Personal Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://becacabe2002.github.io/search/" title="search (Alt &#43; /)" accesskey=/>
+                    <span>search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://becacabe2002.github.io/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://becacabe2002.github.io/archives/" title="archives">
+                    <span>archives</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://becacabe2002.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://becacabe2002.github.io/blogs/">Blogs</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Introduction to Apache Airflow | Airflow Part 1
+    </h1>
+    <div class="post-description">
+      Bài đầu tiên trong chuỗi series tìm hiểu về Apache Airflow.
+    </div>
+    <div class="post-meta"><span title='2024-02-01 13:48:41 +0700 +07'>February 1, 2024</span>
+
+</div>
+  </header> 
+<figure class="entry-cover"><img loading="eager" src="https://becacabe2002.github.io/images/airflow/airflow-cover.png" alt="alt text">
+        
+</figure><div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%c4%91%e1%bb%8bnh-ngh%c4%a9a" aria-label="Định nghĩa">Định nghĩa</a><ul>
+                        
+                <li>
+                    <a href="#m%e1%bb%99t-s%e1%bb%91-%c4%91%e1%ba%b7c-t%c3%adnh-n%e1%bb%95i-b%e1%ba%adt-c%e1%bb%a7a-airflow" aria-label="Một số đặc tính nổi bật của Airflow">Một số đặc tính nổi bật của Airflow</a></li>
+                <li>
+                    <a href="#v%c3%ac-sao-n%c3%aan-d%c3%b9ng-airflow" aria-label="Vì sao nên dùng Airflow?">Vì sao nên dùng Airflow?</a></li>
+                <li>
+                    <a href="#nh%e1%bb%afng-tr%c6%b0%e1%bb%9dng-h%e1%bb%a3p-n%c3%a0o-kh%c3%b4ng-n%c3%aan-d%c3%b9ng-airflow" aria-label="Những trường hợp nào không nên dùng Airflow?">Những trường hợp nào không nên dùng Airflow?</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="định-nghĩa">Định nghĩa<a hidden class="anchor" aria-hidden="true" href="#định-nghĩa">#</a></h2>
+<blockquote>
+<p><em><strong>Apache Airflow</strong> là một nền tảng mã nguồn mở để phát triển, lập lịch và giám sát luồng công việc của các project dữ liệu.</em></p>
+</blockquote>
+<ul>
+<li>Airflow hỗ trợ giao diện web giúp quản lý các trạng thái (state) của luồng công việc một cách trực quan.</li>
+</ul>
+<p><img loading="lazy" src="/images/airflow/airflow-dashboard.png" alt="web interface"  />
+</p>
+<ul>
+<li>Ta có thể triển khai Airflow trên nhiều nền tảng, từ local trên máy tính cá nhân, tới hệ phân tán được setup để hỗ trợ luồng công việc khổng lồ.</li>
+</ul>
+<h3 id="một-số-đặc-tính-nổi-bật-của-airflow">Một số đặc tính nổi bật của Airflow<a hidden class="anchor" aria-hidden="true" href="#một-số-đặc-tính-nổi-bật-của-airflow">#</a></h3>
+<ul>
+<li>
+<p><strong>Dynamic</strong>: các pipeline trong Airflow được cấu hình động bằng việc sử dụng Python code.</p>
+</li>
+<li>
+<p><strong>Extensible</strong>: Airflow framework có chứa các operators, cho phép kết nối với các công nghệ khác (<strong><em>Astronomer</em></strong>, <strong><em>Grafana</em></strong> &hellip;)</p>
+</li>
+<li>
+<p><strong>Flexible</strong>: tính linh hoạt của luồng hoạt động nhờ tận dụng <strong><em>Jinja</em></strong> template</p>
+</li>
+</ul>
+<h3 id="vì-sao-nên-dùng-airflow">Vì sao nên dùng Airflow?<a hidden class="anchor" aria-hidden="true" href="#vì-sao-nên-dùng-airflow">#</a></h3>
+<ul>
+<li>
+<p>Với những workflow có khởi đầu và kết thúc rõ ràng, ta có thể cấu hình chúng thành các Airflow DAG (sẽ được giới thiệu sau)</p>
+</li>
+<li>
+<p>Workflow được định nghĩa thành Python code, cho phép:</p>
+<ul>
+<li>Workflows có thể được quản lý phiên bản, cho phép rollback phiên bản cũ.</li>
+<li>Workflows có thể được phát triển bởi nhiều người trong một team.</li>
+<li>Có thể tạo các test để kiểm tra các chức năng</li>
+</ul>
+</li>
+<li>
+<p>Airflow cho phép lập lịch các task, giúp tạo các pipeline phức tạp. Ngoài ra, khả năng chạy lại một phần pipeline sau khi khác phục sự cố giúp tối đa hóa hiệu suất.</p>
+</li>
+<li>
+<p>Giao diện người dùng của Airflow cung cấp:</p>
+<ul>
+<li>Góc nhìn chi tiết: Pipelines, Tasks</li>
+<li>Góc nhìn tổng quan hoạt động của các pipelines theo thời gian</li>
+<li>Inspect logs và khởi chạy task trong trường hợp chạy lỗi</li>
+</ul>
+</li>
+<li>
+<p>Airflow là mã nguồn mở, cho phép tính tùy biến cao. Do đó được tin dùng bởi nhiều công ty trên thế giới.</p>
+</li>
+</ul>
+<h3 id="những-trường-hợp-nào-không-nên-dùng-airflow">Những trường hợp nào không nên dùng Airflow?<a hidden class="anchor" aria-hidden="true" href="#những-trường-hợp-nào-không-nên-dùng-airflow">#</a></h3>
+<ul>
+<li>
+<p>Airflow không hỗ trợ các luồng công việc không ngừng dựa trên sự kiện.</p>
+<ul>
+<li>Mặc dù Airflow hỗ trợ Apache Kafka, là một streaming system được sử dụng để tiếp nhận và sử lý dữ liệu thời gian thực. Nhưng các task sẽ được tái khởi động định kì.</li>
+</ul>
+</li>
+<li>
+<p>Không phù hợp với nếu người dùng ưu việc chọn thay vì code.</p>
+</li>
+</ul>
+
+
+    
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://becacabe2002.github.io/tags/airflow/">airflow</a></li>
+      <li><a href="https://becacabe2002.github.io/tags/data/">data</a></li>
+      <li><a href="https://becacabe2002.github.io/tags/orchestration/">orchestration</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://becacabe2002.github.io/blogs/database-index-p2/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Database Index (Part 2) - Clustered/Non-clustered</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://becacabe2002.github.io/">Mr.Fish Personal Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
